@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="hi">
+  <head>
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='awgp-logo.png') }}"
+      type="image/x-icon"
+    />
+    <meta charset="utf-8" />
+    <title>{{ table_name }} - तालिका विवरण</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sahitya&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .table-scroll-box {
+        max-width: 100%;
+        max-height: 500px;
+        overflow: auto;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-top: 1.5em;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        background-color: white;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: max-content;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 12px 16px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #ffe0b2;
+        color: #5d4037;
+        font-weight: bold;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      tr:hover {
+        background-color: #fff8e1;
+      }
+
+      @media (max-width: 768px) {
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+          display: block;
+        }
+
+        thead {
+          display: none;
+        }
+
+        tr {
+          margin-bottom: 1rem;
+          border-bottom: 2px solid #eee;
+        }
+
+        td {
+          position: relative;
+          padding-left: 50%;
+          text-align: left;
+        }
+
+        td::before {
+          position: absolute;
+          top: 12px;
+          left: 16px;
+          width: 45%;
+          white-space: nowrap;
+          font-weight: bold;
+          content: attr(data-label);
+          color: #795548;
+        }
+      }
+
+      .table-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 1em;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .fullscreen-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #444;
+        padding: 0.3rem;
+      }
+
+      .fullscreen-btn:hover {
+        color: #000;
+      }
+
+      .home-btn {
+        font-size: 1rem;
+        padding: 8px 12px;
+        background-color: #ff9800;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background 0.3s ease;
+      }
+
+      .home-btn:hover {
+        background-color: #e65100;
+      }
+
+      /* Modal Styles */
+      .modal {
+        position: fixed;
+        z-index: 999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background-color: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        max-width: 90%;
+        max-height: 90%;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+      }
+
+      .modal-content img {
+        max-width: 100%;
+        max-height: 80vh;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .close {
+        color: #aaa;
+        position: absolute;
+        top: 10px;
+        right: 16px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .close:hover {
+        color: black;
+      }
+    </style>
+  </head>
+  <body>
+    {% include "_header.html" %}
+
+    <main>
+      <div class="table-header">
+        <h1>📋 तालिका: {{ table_name }}</h1>
+        <div class="header-right">
+          <button
+            id="fullscreenToggle"
+            class="fullscreen-btn"
+            title="फुल स्क्रीन"
+          >
+            🖥️
+          </button>
+        </div>
+      </div>
+
+      {% if rows %}
+      <div class="table-scroll-box" id="fullscreenBox">
+        <table>
+          <thead>
+            <tr>
+              {% for col in columns %}
+              <th>{{ col }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in rows %}
+            <tr>
+              {% for col in columns %}
+              <td data-label="{{ col }}">
+                {% if col == 'कार्यक्रम की एक फोटो' and row[col] %}
+                <a href="#" class="photo-link" data-img="{{ row[col] }}"
+                  >See Photo</a
+                >
+                {% elif col == 'दिनांक' and row[col] %} {{
+                row[col][:10] }} {% else %} {{ row[col] }} {%
+                endif %}
+              </td>
+
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="empty-message">⚠️ इस तालिका में कोई डाटा नहीं है।</p>
+      {% endif %}
+
+      <div class="bottom-link">
+        <a href="/" class="home-btn">← 🏠 होम पेज पर जाएं</a>
+      </div>
+
+      <!-- Modal for Image -->
+      <div id="imgModal" class="modal" style="display: none">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <img id="modalImage" src="" alt="Photo" />
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Fullscreen toggle
+      const btn = document.getElementById("fullscreenToggle");
+      const box = document.getElementById("fullscreenBox");
+
+      btn.addEventListener("click", () => {
+        if (!document.fullscreenElement) {
+          box
+            .requestFullscreen()
+            .catch((err) => alert("फुल स्क्रीन त्रुटि: " + err.message));
+        } else {
+          document.exitFullscreen();
+        }
+      });
+
+      // Modal logic
+      const modal = document.getElementById("imgModal");
+      const modalImg = document.getElementById("modalImage");
+      const closeBtn = document.querySelector(".close");
+
+      document.querySelectorAll(".photo-link").forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          let imgUrl = link.getAttribute("data-img");
+
+          // Optional: Convert Google Drive sharing link to direct view link
+          if (imgUrl.includes("drive.google.com")) {
+            const match = imgUrl.match(/\/d\/([^/]+)\//);
+            if (match && match[1]) {
+              const fileId = match[1];
+              imgUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+            }
+          }
+
+          modalImg.src = imgUrl;
+          modal.style.display = "flex";
+        });
+      });
+
+      closeBtn.onclick = function () {
+        modal.style.display = "none";
+        modalImg.src = "";
+      };
+
+      window.onclick = function (event) {
+        if (event.target === modal) {
+          modal.style.display = "none";
+          modalImg.src = "";
+        }
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="hi">
+  <head>
+  <link rel="icon" href="{{ url_for('static', filename='awgp-logo.png') }}" type="image/x-icon" />
+    <meta charset="UTF-8" />
+    <title>{{ upzone_name }}  तहसील विवरण</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    {% include "_header.html" %}
+    <h1>{{ tahsil }}  तहसील विवरण</h1>
+    <table border="1">
+      <tr>
+        <th>तहसील</th>
+        <th>गाँव</th>
+        <th>कार्यक्रम</th>
+        <th>उपस्थिति</th>
+      </tr>
+      {% for row in data %}
+      <tr>
+        <td>
+          <a
+            href="{{ url_for('detail_routes.tehsil_detail', tehsil_name=row['तहसील का नाम'], table_name=tbale_name) }}"
+            >{{ row['तहसील का नाम'] }}</a
+          >
+        </td>
+        <td>{{ row['गाँव का नाम'] }}</td>
+        <td>{{ row['कार्यक्रम का नाम'] }}</td>
+        <td>{{ row['उपस्थिति (संख्या)'] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <p>
+      <a
+        href="{{ url_for('summary_routes.upzone_summary', table_name=table_name) }}"
+        >← Back to Summary</a
+      >
+    </p>
+  </body>
+</html>

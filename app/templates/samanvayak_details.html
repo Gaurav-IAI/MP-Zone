@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>समन्वयक विवरण</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f7f9fc;
+        }
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+        .table-wrapper {
+            transition: all 0.3s ease;
+            display: none;
+        }
+        .table-wrapper.active {
+            display: block;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        h4 {
+            margin-top: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="p-3">
+<div class="container">
+    <div class="card p-4">
+        <h2 class="mb-4">🗂️ जिला समन्वयक विवरण देखें</h2>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert alert-warning">
+              {% for message in messages %}
+                <div>{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="post" class="mb-4">
+            <div class="mb-3">
+                <label for="filepath" class="form-label">Excel फ़ाइल का पूरा रास्ता:</label>
+                <input type="text" id="filepath" name="filepath" class="form-control" placeholder="उदाहरण: C:/Users/you/Desktop/sheet.xlsx">
+            </div>
+            <button type="submit" class="btn btn-success">📄 डेटा दिखाएं</button>
+        </form>
+
+        {% if tables %}
+            <div class="mb-4">
+                <label for="sheetSelect" class="form-label">शीट चुनें:</label>
+                <select id="sheetSelect" class="form-select" onchange="showSheet(this.value)">
+                    {% for sn in sheet_names %}
+                        <option value="{{ sn|replace(' ', '_') }}">{{ sn }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="sheetTables">
+                {% for sn, table_html in tables.items() %}
+                    {% set safe_id = sn|replace(' ', '_') %}
+                    <div id="sheet_{{ safe_id }}" class="table-wrapper {% if loop.first %}active{% endif %}">
+                        <h4 class="text-primary">📄 {{ sn }}</h4>
+                        <div class="table-responsive">
+                            {{ table_html|safe }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- JS -->
+<script>
+    function showSheet(selectedId) {
+        document.querySelectorAll('.table-wrapper').forEach(el => {
+            el.classList.remove('active');
+        });
+        const target = document.getElementById('sheet_' + selectedId);
+        if (target) target.classList.add('active');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ upzone_name }} - उपजोन विवरण</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='awgp-logo.png') }}" type="image/x-icon" />
+</head>
+<body>
+{% include "_header.html" %}
+    <h1>{{ upzone_name }} - उपजोन विवरण</h1>
+    
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>जिला</th>
+                <th>तहसील</th>
+                <th>गाँव</th>
+                <th>कार्यक्रम</th>
+                <th>उपस्थिति</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in data %}
+            <tr>
+                <td><a href="{{ url_for('detail_routes.jila_detail', jila_name=row['जिले का नाम'], table_name=table_name) }}">{{ row['जिले का नाम'] }}</a></td>
+                <td><a href="{{ url_for('detail_routes.tehsil_detail', tehsil_name=row['तहसील का नाम'], table_name=table_name) }}">{{ row['तहसील का नाम'] }}</a></td>
+                <td>{{ row['गाँव का नाम'] }}</td>
+                <td>{{ row['कार्यक्रम का नाम'] }}</td>
+                <td>{{ row['उपस्थिति (संख्या)'] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    
+    <p><a href="{{ url_for('summary_routes.upzone_summary', table_name=table_name) }}" class="btn-secondary">← Back to Summary</a></p>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="hi">
+  <head>
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='awgp-logo.png') }}"
+      type="image/x-icon"
+    />
+    <meta charset="utf-8" />
+    <title>एक्सेल फ़ाइल अपलोड करें</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sahitya&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background-color: #fefefe;
+        color: var(--text-dark);
+      }
+
+      main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 3em 1em;
+      }
+
+      .upload-container {
+        background: white;
+        padding: 2.5em 3em;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+      }
+
+      h1 {
+        margin-bottom: 1.5em;
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 1.8em;
+      }
+
+      .custom-file-upload {
+        display: inline-block;
+        padding: 0.8em 1.8em;
+        cursor: pointer;
+        background-color: #0d6efd; /* Bootstrap blue */
+        color: white; /* White text for contrast */
+        font-weight: 600;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+        margin-bottom: 1em;
+      }
+
+      .custom-file-upload:hover,
+      .custom-file-upload:focus {
+        background-color: #0b5ed7; /* Slightly darker blue */
+        outline: none;
+        box-shadow: 0 6px 12px rgba(11, 94, 215, 0.5);
+      }
+
+      #file {
+        display: none;
+      }
+
+      .file-name {
+        display: block;
+        margin-bottom: 1.5em;
+        font-size: 0.95em;
+        color: #555;
+        min-height: 1.2em;
+        font-style: italic;
+      }
+
+      .btn-primary {
+        background-color: #28a745; /* Green */
+        color: white;
+        padding: 0.7em 2em;
+        font-weight: 700;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+      }
+
+      .btn-primary:hover,
+      .btn-primary:focus {
+        background-color: #1e7e34; /* Darker green */
+        outline: none;
+        box-shadow: 0 6px 12px rgba(30, 126, 52, 0.5);
+      }
+
+      .btn-secondary {
+        display: inline-block;
+        margin-top: 1.8em;
+        color: var(--button-blue);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95em;
+        transition: color 0.3s ease;
+      }
+
+      .btn-secondary:hover,
+      .btn-secondary:focus {
+        color: #0d47a1;
+        outline: none;
+      }
+
+      @media (max-width: 600px) {
+        .upload-container {
+          padding: 2em;
+        }
+
+        h1 {
+          font-size: 1.5em;
+        }
+
+        .btn-primary,
+        .custom-file-upload {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    {% include "_header.html" %}
+
+    <main>
+      <div class="upload-container">
+        <h1>एक्सेल फ़ाइल अपलोड करें (.xlsx)</h1>
+
+        <form
+          action="/upload"
+          method="post"
+          enctype="multipart/form-data"
+          novalidate
+        >
+          <label for="file" class="custom-file-upload" tabindex="0">
+            फ़ाइल चुनें
+          </label>
+          <input type="file" name="file" id="file" accept=".xlsx" required />
+          <span id="file-name" class="file-name">कोई फ़ाइल चुनी नहीं गई</span>
+          <input
+            type="submit"
+            value="अपलोड करें"
+            class="btn-primary"
+            aria-label="Upload Excel file"
+          />
+        </form>
+
+        <a href="/" class="btn-secondary">← होम पेज पर जाएं</a>
+      </div>
+    </main>
+
+    <script>
+      const fileInput = document.getElementById("file");
+      const fileNameSpan = document.getElementById("file-name");
+      const fileLabel = document.querySelector(".custom-file-upload");
+
+      fileInput.addEventListener("change", () => {
+        fileNameSpan.textContent =
+          fileInput.files.length > 0
+            ? fileInput.files[0].name
+            : "कोई फ़ाइल चुनी नहीं गई";
+      });
+
+      fileLabel.addEventListener("keypress", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          fileInput.click();
+        }
+      });
+    </script>
+  </body>
+</html>

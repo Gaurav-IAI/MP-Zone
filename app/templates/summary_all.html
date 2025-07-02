@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="hi">
+  <head>
+    <link rel="icon" href="{{ url_for('static', filename='awgp-logo.png') }}" type="image/x-icon" />
+    <meta charset="utf-8" />
+    <title>सभी तालिकाओं का उपजोन सारांश</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background-color: #fefefe;
+        color: #3e2723;
+        padding: 1em;
+      }
+
+      main {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        color: #ff9800;
+        font-size: 1.8rem;
+        margin-bottom: 1em;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      thead {
+        background-color: #fff3e0;
+        color: #5d4037;
+      }
+
+      th,
+      td {
+        padding: 14px 16px;
+        border: 1px solid #eee;
+        text-align: left;
+        font-size: 1rem;
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #fafafa;
+      }
+
+      tbody tr:hover {
+        background-color: #fffde7;
+      }
+
+      tfoot td {
+        font-weight: bold;
+        background-color: #fff8dc;
+      }
+
+      a {
+        color: #1976d2;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .btn-secondary {
+        align: center;
+        justify-content: center;
+        display: inline-block;
+        margin-top: 1.5em;
+        padding: 10px 18px;
+        background-color: #555;
+        color: #fff;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn-secondary:hover {
+        background-color: #333;
+      }
+
+      @media (max-width: 768px) {
+        table {
+          display: block;
+          width: 100%;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          border-radius: 8px;
+          box-shadow: none;
+          border: none;
+        }
+
+        thead,
+        tfoot {
+          display: table-header-group;
+        }
+
+        th,
+        td {
+          white-space: nowrap;
+          font-size: 0.9rem;
+          padding: 10px 12px;
+        }
+
+        h1 {
+          font-size: 1.4rem;
+        }
+
+        .btn-secondary {
+          width: 100%;
+          text-align: center;
+          padding: 12px 0;
+          font-size: 1.1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    {% include "_header.html" %}
+
+    <main>
+      <h1>📊 सभी तालिकाओं का उपजोन सारांश</h1>
+
+      <table>
+        <thead>
+          <tr>
+            <th>📄 तालिका नाम</th>
+            <th>उपजोन</th>
+            <th>जिले की संख्या</th>
+            <th>तहसील की संख्या</th>
+            <th>कार्यक्रम की संख्या</th>
+            <th>कुल उपस्थिति</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in summary %}
+          <tr>
+            <td>{{ row.table_name }}</td>
+            {% if row.upzone %}
+            <td>{{ row.upzone }}</td>
+            {% else %}
+            <td>(कोई उपजोन नहीं)</td>
+            {% endif %}
+            <td>{{ row.jila_count }}</td>
+            <td>{{ row.tahsil_count }}</td>
+            <td>{{ row.karyakram_sankhya }}</td>
+            <td>{{ row.upasthiti|int }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="1">{{ total.table_name }}</td>
+            <td>{{ total.upzone }}</td>
+            <td>{{ total.jila_count }}</td>
+            <td>{{ total.tahsil_count }}</td>
+            <td>{{ total.karyakram_sankhya }}</td>
+            <td>{{ total.upasthiti }}</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <p><a href="/" class="btn-secondary">← Home पर वापस जाएं</a></p>
+    </main>
+  </body>
+</html>

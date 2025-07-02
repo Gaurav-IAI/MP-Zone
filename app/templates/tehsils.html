@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="hi">
+  <head>
+  <link rel="icon" href="{{ url_for('static', filename='awgp-logo.png') }}" type="image/x-icon" />
+    <meta charset="utf-8" />
+    <title>सभी उपजोन, जिले और तहसील</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <script>
+      function toggleDistricts(id) {
+        const container = document.getElementById(id);
+        const icon = document.getElementById(id + "-icon");
+        if (
+          container.style.display === "none" ||
+          container.style.display === ""
+        ) {
+          container.style.display = "block";
+          icon.innerHTML = "▲";
+        } else {
+          container.style.display = "none";
+          icon.innerHTML = "▼";
+        }
+      }
+    </script>
+  </head>
+  <body>
+    {% include "_header.html" %}
+
+    <main>
+      <h1>सभी उपजोन, जिले और तहसील का डाटा</h1>
+
+      {% for upzone, districts in grouped_data.items() %}
+      <div class="upzone" onclick="toggleDistricts('upzone-{{ loop.index }}')">
+        <h2>
+          उपजोन: {{ upzone }}
+          <span id="upzone-{{ loop.index }}-icon" class="toggle-icon">▼</span>
+        </h2>
+      </div>
+
+      <div class="districts-container" id="upzone-{{ loop.index }}">
+        {% for district, tehsils in districts.items() %}
+        <div class="district">
+          <h3>जिला: {{ district }}</h3>
+
+          {% for tehsil, rows in tehsils.items() %}
+          <h4>तहसील: {{ tehsil }}</h4>
+
+          {% if rows %}
+          <table>
+            <thead>
+              <tr>
+                {% for key in rows[0].keys() %}
+                <th>{{ key }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in rows %}
+              <tr>
+                {% for value in row.values() %}
+                <td>{{ value }}</td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p class="no-data">कोई डेटा उपलब्ध नहीं है</p>
+          {% endif %} {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+
+      <div style="text-align: center; margin-top: 2em">
+        <a href="/" class="btn-primary">← होम पेज पर जाएं</a>
+      </div>
+    </main>
+  </body>
+</html>

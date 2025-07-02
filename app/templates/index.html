@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="hi">
+  <head>
+  <link rel="icon" href="{{ url_for('static', filename='awgp-logo.png') }}" type="image/x-icon" />
+    <meta charset="utf-8" />
+    <title>कार्यक्रम डाटा होम</title>
+
+    <!-- Common Styles -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sahitya&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --sunrise-yellow: #fff8dc;
+        --soft-orange: #ffe082;
+        --primary-color: #ff9800;
+        --button-blue: #1976d2;
+        --button-red: #e53935;
+        --text-dark: #3e2723;
+        --text-light: #ffffff;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background-color: #fefefe;
+        color: var(--text-dark);
+      }
+
+      main {
+        padding: 1.5em;
+      }
+
+      h2 {
+        color: var(--primary-color);
+        font-size: 1.6em;
+        margin-top: 1em;
+      }
+
+      .upload-form {
+        margin: 2em 0;
+      }
+
+      .btn-primary,
+      .btn-danger {
+        display: inline-block;
+        padding: 10px 18px;
+        margin: 4px 6px;
+        font-size: 15px;
+        text-decoration: none;
+        border-radius: 8px;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      .btn-primary {
+        background-color: var(--button-blue);
+        color: var(--text-light);
+      }
+
+      .btn-primary:hover {
+        background-color: #1565c0;
+        transform: translateY(-1px);
+      }
+
+      .btn-danger {
+        background-color: var(--button-red);
+        color: var(--text-light);
+      }
+
+      .btn-danger:hover {
+        background-color: #c62828;
+        transform: translateY(-1px);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      th,
+      td {
+        border: 1px solid #eee;
+        padding: 14px 16px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #fff3e0;
+        color: #5d4037;
+        font-weight: bold;
+      }
+
+      tr:nth-child(even) {
+        background-color: #fafafa;
+      }
+
+      tr:hover {
+        background-color: #fffde7;
+      }
+
+      .no-data {
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        color: #856404;
+        padding: 1em;
+        margin-top: 1.5em;
+        border-radius: 8px;
+      }
+
+      /* ------------------------- Responsive Section ------------------------ */
+      @media (max-width: 768px) {
+        header {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          padding: 1em;
+        }
+
+        header img {
+          height: 60px;
+          margin: 0.5em;
+        }
+
+        .heading-text {
+          margin: 0.5em 0;
+        }
+
+        .heading-text p {
+          font-size: 1rem;
+        }
+
+        .btn-primary,
+        .btn-danger {
+          width: 100%;
+          text-align: center;
+          margin: 0.5em 0;
+        }
+
+        table,
+        thead {
+          display: none;
+        }
+
+        tbody,
+        tr,
+        td {
+          display: block;
+          width: 100%;
+        }
+
+        tr {
+          margin-bottom: 1em;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          background: #fffdf2;
+          padding: 1em;
+        }
+
+        td {
+          padding: 0.5em;
+          text-align: left;
+          position: relative;
+        }
+
+        td::before {
+          content: attr(data-label);
+          font-weight: bold;
+          display: block;
+          margin-bottom: 0.3em;
+          color: #5d4037;
+        }
+
+        h2 {
+          font-size: 1.3em;
+        }
+
+        main {
+          padding: 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    {% include "_header.html" %}
+
+    <main>
+      <div class="table-container">
+        <div class="upload-form">
+          <a href="/upload" class="btn-primary">📤 Excel फ़ाइल अपलोड करें</a>
+          <a href="/samanvayak-details" class="btn-primary">📑 समन्वयक विवरण</a>
+          <a href="/summary_all" class="btn-primary">📈 सभी तालिकाओं का सारांश</a>        
+          </div>
+
+        {% if tables %}
+        <h2>📋 उपलब्ध तालिकाएँ</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>📄 तालिका नाम</th>
+              <th>⚙️ कार्रवाई</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for table_name in tables %}
+            <tr>
+              <td data-label="📄 तालिका नाम">{{ table_name }}</td>
+              <td data-label="⚙️ कार्रवाई">
+                <a
+                  href="{{ url_for('main_routes.view_table', table_name=table_name) }}"
+                  class="btn-primary"
+                  >🔍 देखें</a
+                >
+                <a
+                  href="{{ url_for('summary_routes.upzone_summary', table_name=table_name) }}"
+                  class="btn-primary"
+                  >📈 सारांश</a
+                >
+                <a
+                  href="{{ url_for('detail_routes.all_tehsils', table_name=table_name) }}"
+                  class="btn-primary"
+                  >📊 तहसील विवरण</a
+                >
+                <form
+                  action="{{ url_for('main_routes.delete_table', table_name=table_name) }}"
+                  method="post"
+                  style="display: inline"
+                  onsubmit="return confirm('क्या आप इस तालिका को हटाना चाहते हैं?');"
+                >
+                  <button type="submit" class="btn-danger">🗑️ हटाएं</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="no-data">
+          ⚠️ कोई तालिका उपलब्ध नहीं है। कृपया पहले एक फ़ाइल अपलोड करें।
+        </p>
+        {% endif %}
+      </div>
+    </main>
+  </body>
+</html>
