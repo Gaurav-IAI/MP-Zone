@@ -2,7 +2,7 @@ services:
   - type: web
     name: flask-app
     env: python
-    pythonVersion: "3.12"
+    pythonVersion: "3.11"
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn run:app
     plan: free
