@@ -49,6 +49,16 @@ def upload_file():
         try:
             df = pd.read_excel(file_path)
             print("✅ Excel file read successfully.")
+
+            # 🧼 Strip whitespace from column headers
+            df.columns = df.columns.str.strip()
+
+            # 🧼 Strip whitespace from every string cell value
+            df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+
+            print(f"🧾 Cleaned column names: {df.columns.tolist()}")
+
+            print("✅ Excel file read successfully.")
         except Exception as e:
             print(f"❌ Failed to read Excel file: {e}")
             flash(f"Failed to read Excel file: {e}")

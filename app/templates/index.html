@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="hi">
   <head>
-  <link rel="icon" href="{{ url_for('static', filename='awgp-logo.png') }}" type="image/x-icon" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='awgp-logo.png') }}"
+      type="image/x-icon"
+    />
     <meta charset="utf-8" />
     <title>कार्यक्रम डाटा होम</title>
 
@@ -207,23 +211,29 @@
         <div class="upload-form">
           <a href="/upload" class="btn-primary">📤 Excel फ़ाइल अपलोड करें</a>
           <a href="/samanvayak-details" class="btn-primary">📑 समन्वयक विवरण</a>
-          <a href="/summary_all" class="btn-primary">📈 सभी तालिकाओं का सारांश</a> 
-          <a href="/merge-view" class="btn-primary">सभी डेटा</a>         
-          </div>
+          <a href="/summary_all" class="btn-primary"
+            >📈 सभी तालिकाओं का सारांश</a
+          >
+          <a href="/merge-view" class="btn-primary">सभी डेटा</a>
+        </div>
 
         {% if tables %}
         <h2>📋 उपलब्ध तालिकाएँ</h2>
         <table>
           <thead>
             <tr>
-              <th>📄 तालिका नाम</th>
-              <th>⚙️ कार्रवाई</th>
+              <th>ज्योति कलश यात्रा रथ</th>
+              <th>विकल्प</th>
             </tr>
           </thead>
           <tbody>
             {% for table_name in tables %}
             <tr>
-              <td data-label="📄 तालिका नाम">{{ table_name }}</td>
+              <td data-label="📄 तालिका नाम">
+                {{ table_name.replace('ज्योति_कलश_यात्रा_रथ_', '').replace('_',
+                ' ') }}
+              </td>
+
               <td data-label="⚙️ कार्रवाई">
                 <a
                   href="{{ url_for('main_routes.view_table', table_name=table_name) }}"

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, abort
-from app.utils import get_db_connection
+from app.utils import get_db_connection, clean_db_row
 
 bp = Blueprint('summary_routes', __name__)
 
@@ -55,7 +55,8 @@ def upzone_summary(table_name):
 
 
             cursor.execute(query)
-            summary = cursor.fetchall()
+            summary = [clean_db_row(row) for row in cursor.fetchall()]
+
     except Exception as e:
         return f"त्रुटि: {str(e)}", 500
     finally:
@@ -117,7 +118,7 @@ def summary_all_tables():
                         ORDER BY upzone;
                     """
                     cursor.execute(query)
-                    rows = cursor.fetchall()
+                    rows = [clean_db_row(row) for row in cursor.fetchall()]
                     all_summary.extend(rows)
 
                 except Exception as inner_error:

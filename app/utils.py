@@ -2,6 +2,7 @@ import pymysql
 import pandas as pd
 import os
 from dotenv import load_dotenv
+import re
 
 # Load environment variables from .env file
 load_dotenv()
@@ -35,3 +36,10 @@ def safe_parse_int(val):
         return int(val)
     except Exception:
         return None
+
+def clean_db_row(row):
+    """Trim strings and normalize values in DB result row."""
+    return {
+        k: v.strip() if isinstance(v, str) else v
+        for k, v in row.items()
+    }
