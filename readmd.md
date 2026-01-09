@@ -1,4 +1,9 @@
+Activate conda environment named "pr"
 
+### bash
+```
+conda activate pr
+```
 ├── app
 │   ├── config.py
 │   ├── __init__.py
